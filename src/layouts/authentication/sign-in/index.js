@@ -23,7 +23,7 @@ import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
-
+import axios from "axios";
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -40,20 +40,46 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import { Login } from "./api/auth";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const [username, setUsers] = useState("");
   const [password, setPassword] = useState("");
+
+  const params = new URLSearchParams();
+  params.append("grant_type", "");
+  params.append("username", username);
+  params.append("password", password);
+  params.append("scope", "");
+  params.append("client_id", "");
+  params.append("client_secret", "");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(username, password);
     if (username.length === 0) {
       alert("inserte el usuario");
     } else if (password.length === 0) {
       alert("inserte el password");
     } else {
-      console.log(username, password);
+      try {
+        const res = await Login(params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+        const token = res.data.access_token;
+        console.log(token);
+        console.log(res);
+        localStorage.setItem("token", token);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        console.log("Login exitoso y token guardado");
+        //console.log(JSON.stringify(res));
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
@@ -98,6 +124,7 @@ function Basic() {
                 type="text"
                 label="Name"
                 fullWidth
+                value={username}
                 onChange={(e) => setUsers(e.target.value)}
               />
             </MDBox>
@@ -106,6 +133,7 @@ function Basic() {
                 type="password"
                 label="Password"
                 fullWidt
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </MDBox>
