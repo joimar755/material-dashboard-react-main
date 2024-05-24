@@ -26,7 +26,7 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import { useState } from "react";
-
+import { Resister_users } from "../../authentication/sign-in/api/auth";
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
@@ -34,18 +34,30 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
 function Cover() {
-  const [username, setUsers] = useState("");
+  const [name, setUsers] = useState("");
   const [password, setPassword] = useState("");
   const [email, setemail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username.length === 0) {
+    if (name.length === 0) {
       alert("inserte el usuario");
     } else if (password.length === 0) {
       alert("inserte el password");
     } else {
-      console.log(username, password, email);
+      try {
+        const res = await Resister_users({
+          name,
+          email,
+          password,
+        });
+        const data = res.data.data;
+        console.log(data);
+        console.log(res);
+        //console.log(res.password);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (

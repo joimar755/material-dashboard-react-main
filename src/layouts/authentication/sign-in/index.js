@@ -73,9 +73,13 @@ function Basic() {
         const token = res.data.access_token;
         console.log(token);
         console.log(res);
-        localStorage.setItem("token", token);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        console.log("Login exitoso y token guardado");
+        if (token) {
+          localStorage.setItem("token", token);
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          console.log("Login exitoso y token guardado");
+        } else {
+          console.log("error");
+        }
         //console.log(JSON.stringify(res));
       } catch (error) {
         console.log(error);
