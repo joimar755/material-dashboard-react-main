@@ -48,14 +48,6 @@ function Basic() {
   const [username, setUsers] = useState("");
   const [password, setPassword] = useState("");
 
-  const params = new URLSearchParams();
-  params.append("grant_type", "");
-  params.append("username", username);
-  params.append("password", password);
-  params.append("scope", "");
-  params.append("client_id", "");
-  params.append("client_secret", "");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(username, password);
@@ -65,10 +57,9 @@ function Basic() {
       alert("inserte el password");
     } else {
       try {
-        const res = await Login(params, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+        const res = await Login({
+          username,
+          password,
         });
         const token = res.data.access_token;
         console.log(token);
